@@ -2,6 +2,7 @@
 using System.Web.Security;
 using System.Web;
 using System;
+using System.Net;
 
 namespace FormsAuthentications.Models
 {
@@ -15,7 +16,7 @@ namespace FormsAuthentications.Models
                 1,                                     // ticket version
                 username,                              // authenticated username
                 DateTime.Now,                          // issueDate
-                DateTime.Now.AddSeconds(10),           // expiryDate
+                DateTime.Now.AddMinutes(10),           // expiryDate
                 persistToken,                          // true to persist across browser sessions
                 JsonConvert.SerializeObject(session).ToString(),  // user data                            // can be used to store additional user data
                 FormsAuthentication.FormsCookiePath);  // the path for the cookie
@@ -24,9 +25,11 @@ namespace FormsAuthentications.Models
                 string encryptedTicket = FormsAuthentication.Encrypt(ticket);
 
                 // Add the cookie to the request to save it
-                HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-                cookie.HttpOnly = true;
-                cookie.Expires = ticket.Expiration;
+                HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
+                {
+                    //HttpOnly = true,
+                    Expires = ticket.Expiration
+                };
                 response.Cookies.Add(cookie);
 
                 return true;
@@ -75,8 +78,8 @@ namespace FormsAuthentications.Models
         {
             try
             {
-                FormsAuthentication.SignOut();
-                return string.IsNullOrWhiteSpace(response.Cookies[FormsAuthentication.FormsCookieName].Value);
+                response.Cookies[FormsAuthentication.FormsCookieName].Expires = DateTime.Now.AddDays(-1);
+                return true;
             }
             catch (Exception)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FormsAuthentications.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,7 +18,11 @@ namespace FormsAuthentications
 
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {
-            FormsAuthentication.SignOut();
+        }
+
+        protected void btnLogOut_Click(object sender, EventArgs e)
+        {
+            CookieAuthentication.DeleteCookie(Response);
             Response.Redirect("~/Authentication/Login.aspx");
         }
     }

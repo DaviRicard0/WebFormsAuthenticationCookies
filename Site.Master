@@ -65,6 +65,9 @@
                             </ul>
                         </LoggedInTemplate>
                     </asp:LoginView>
+                    <ul class="navbar-nav navbar-right">
+                        <li><asp:Button runat="server" ID="btnLogOut" OnClick="btnLogOut_Click" Text="Sair"></asp:Button></li>
+                    </ul>
                 </div>
             </div>
         </nav>
